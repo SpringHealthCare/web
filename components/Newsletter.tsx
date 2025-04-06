@@ -27,8 +27,16 @@ export default function Newsletter() {
   };
 
   return (
-    <section className="bg-teal-600 py-20">
-      <div className="container mx-auto px-4">
+    <section className="bg-[#04c7d0] py-20 relative">
+      {/* Decorative pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0" style={{
+          backgroundImage: "radial-gradient(circle at 20px 20px, white 2px, transparent 0)",
+          backgroundSize: "40px 40px"
+        }} />
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
         <motion.div
           className="max-w-3xl mx-auto text-center"
           initial={{ opacity: 0, y: 20 }}
@@ -39,13 +47,13 @@ export default function Newsletter() {
           <h2 className="text-3xl font-bold mb-4 text-white">
             Stay Informed with Our Newsletter
           </h2>
-          <p className="text-teal-100 mb-8">
+          <p className="text-gray-100 mb-8">
             Subscribe to our newsletter for the latest health tips, news, and
             exclusive offers.
           </p>
           {subscribed ? (
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <p className="text-teal-600 font-semibold text-xl">
+            <div className="bg-white p-6 rounded-lg shadow-xl">
+              <p className="text-[#04c7d0] font-semibold text-xl">
                 Thank you for subscribing!
               </p>
               <p className="text-gray-600 mt-2">
@@ -63,18 +71,20 @@ export default function Newsletter() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="flex-grow px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-300"
+                className="flex-grow px-4 py-3 rounded-md focus:outline-none focus:ring-2 focus:ring-[#04c7d0]/50 shadow-lg"
               />
               <button
                 type="submit"
-                className="bg-white text-teal-600 px-6 py-3 rounded-md font-semibold hover:bg-teal-100 transition duration-300"
+                className="bg-white text-[#04c7d0] px-6 py-3 rounded-md font-semibold 
+                         hover:bg-[#04c7d0] hover:text-white transition-all duration-300 shadow-lg
+                         border-2 border-white"
               >
                 Subscribe
               </button>
             </form>
           )}
           {error && (
-            <p className="mt-4 text-red-200 bg-red-600 p-2 rounded">{error}</p>
+            <p className="mt-4 text-white bg-red-500/80 p-2 rounded">{error}</p>
           )}
         </motion.div>
       </div>

@@ -8,14 +8,14 @@ import { AboutPopup } from './AboutPopup'
 import { useState } from 'react'
 
 export default function About() {
-
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+
   return (
     <section className="py-20 bg-white relative overflow-hidden">
       {/* Dotted pattern background */}
       <div className="absolute top-0 left-1/4 w-48 h-48 opacity-10">
         <div className="absolute inset-0" style={{
-          backgroundImage: 'radial-gradient(#2A9D8F 2px, transparent 2px)',
+          backgroundImage: 'radial-gradient(#04c7d0 2px, transparent 2px)',
           backgroundSize: '24px 24px'
         }} />
       </div>
@@ -47,7 +47,7 @@ export default function About() {
             viewport={{ once: true }}
             className="space-y-6"
           >
-            <span className="text-[#2A9D8F] font-medium">About</span>
+            <span className="text-[#04c7d0] font-medium">About</span>
             
             <h2 className="text-[#1D4451] text-4xl font-bold">
               Obs and Gynae Clinic
@@ -59,10 +59,10 @@ export default function About() {
               gynaecological conditions.
             </p>
 
-            <div className="grid gap-8 mt-8">
+            <div className="space-y-6">
               <div className="flex gap-4 items-start">
-                <div className="bg-[#2A9D8F]/10 p-3 rounded-lg">
-                  <Trophy className="w-6 h-6 text-[#2A9D8F]" />
+                <div className="bg-[#04c7d0]/10 p-3 rounded-lg">
+                  <Trophy className="w-6 h-6 text-[#04c7d0]" />
                 </div>
                 <div>
                   <h3 className="text-[#1D4451] font-semibold text-xl mb-2">
@@ -76,8 +76,8 @@ export default function About() {
               </div>
 
               <div className="flex gap-4 items-start">
-                <div className="bg-[#2A9D8F]/10 p-3 rounded-lg">
-                  <Syringe className="w-6 h-6 text-[#2A9D8F]" />
+                <div className="bg-[#04c7d0]/10 p-3 rounded-lg">
+                  <Syringe className="w-6 h-6 text-[#04c7d0]" />
                 </div>
                 <div>
                   <h3 className="text-[#1D4451] font-semibold text-xl mb-2">
@@ -94,15 +94,15 @@ export default function About() {
 
             <Button
               variant="link"
-              className="text-[#2A9D8F] hover:text-[#1D4451] font-medium p-0 h-auto mt-6"
+              className="text-[#04c7d0] hover:text-[#7e40b6] font-medium p-0 h-auto mt-6"
               onClick={() => setIsPopupOpen(true)}
             >
               More about Us
             </Button>
           </motion.div>
         </div>
-        <AboutPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
       </div>
+      <AboutPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
     </section>
   )
 }

@@ -1,30 +1,12 @@
 import { X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import Link from 'next/link'
 
 interface AboutPopupProps {
   isOpen: boolean
   onClose: () => void
 }
-
-const services = [
-  {
-    title: "Executive Men's Clinic",
-    description: "Focused on addressing health concerns for modern men in Ghana. Includes thorough health assessments, chronic disease management, men's sexual health, and urological consultations. Appointment-based system ensures prompt and efficient service."
-  },
-  {
-    title: "Women's Wellness Services",
-    description: "General outpatient care for women and specialist gynecologic and obstetric consultations. Services include fertility support, antenatal care, cervical and breast cancer screening, and management of gynecologic conditions."
-  },
-  {
-    title: "Couples' Antenatal Class",
-    description: "Designed for expectant or planning couples to prepare for pregnancy and newborn care. Offers bonding opportunities and education on pregnancy changes, danger signs, and newborn care."
-  },
-  {
-    title: "Cardiotocography (CTG)",
-    description: "Monitors the relationship between the unborn baby's heart rate and uterine contractions during pregnancy and labor. Ensures maternal and fetal well-being."
-  }
-]
 
 export function AboutPopup({ isOpen, onClose }: AboutPopupProps) {
   return (
@@ -33,7 +15,7 @@ export function AboutPopup({ isOpen, onClose }: AboutPopupProps) {
         <div className="sticky top-0 bg-white z-10 p-6 pb-4 border-b">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold text-[#1D4451] pr-8">
-              Summary of Services Offered by Spring Health Care Ltd
+              About Spring Health Care Ltd
             </DialogTitle>
           </DialogHeader>
           <Button 
@@ -45,18 +27,36 @@ export function AboutPopup({ isOpen, onClose }: AboutPopupProps) {
             <span className="sr-only">Close</span>
           </Button>
         </div>
-        <div className="p-6">
-          <div className="grid sm:grid-cols-2 gap-6 mt-6">
-            {services.map((service, index) => (
-              <div key={index} className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="text-lg font-semibold text-[#2A9D8F] mb-2">{service.title}</h3>
-                <p className="text-gray-600">{service.description}</p>
-              </div>
-            ))}
+        <div className="p-6 space-y-8">
+          {/* Brief History Section */}
+          <div>
+            <h3 className="text-lg font-semibold text-[#04c7d0] mb-3">Brief History</h3>
+            <p className="text-gray-600">
+              Spring Health Care Limited, formerly known as Info Health Limited, started operations in October 2009. Beginning with a focus on cervical and prostate cancer awareness and screening, the organization expanded its services to include comprehensive Obstetric & Gynaecological Services. Through consistent excellence in healthcare delivery, Spring Health Care Ltd. has grown to become a trusted provider of quality healthcare services.
+            </p>
+          </div>
+
+          {/* Founder Biography Section */}
+          <div>
+            <h3 className="text-lg font-semibold text-[#04c7d0] mb-3">Our Founder</h3>
+            <p className="text-gray-600">
+              Dr. Francis Bitasimi Bilson founded Spring Health Care Limited with a vision to operate a private diagnostic centre providing individualized care. A graduate of the University of Ghana Medical School and a Specialist Obstetrician-Gynaecologist, Dr. Bilson was known for his innovative approach to healthcare, including the MEDICS 24/7 project during the COVID-19 pandemic and the establishment of the Spring Health Care Ltd Men's clinic.
+            </p>
+          </div>
+
+          {/* Read More Button */}
+          <div className="flex justify-center pt-4">
+            <Link href="/about">
+              <Button 
+                className="bg-gradient-to-r from-[#04c7d0] to-[#7e40b6] text-white hover:opacity-90 transition-opacity"
+                onClick={onClose}
+              >
+                Read Full Story
+              </Button>
+            </Link>
           </div>
         </div>
       </DialogContent>
     </Dialog>
   )
-}
-
+} 

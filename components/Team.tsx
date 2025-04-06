@@ -82,7 +82,7 @@ const team = [
 
 export default function Team() {
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-gradient-to-b from-white to-purple-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center mb-12"
@@ -91,8 +91,8 @@ export default function Team() {
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
         >
-          <h2 className="text-xl font-semi-bold mb-8 text-teal-600">Meet Us</h2>
-          <h2 className="text-3xl font-bold mb-4 text-teal-600">
+          <h2 className="text-xl font-semi-bold mb-8 text-[#7e40b6]">Meet Us</h2>
+          <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-[#2A9D8F] to-[#7e40b6] text-transparent bg-clip-text">
             Our Passionate Team
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto mb-6">
@@ -110,15 +110,11 @@ export default function Team() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="flex flex-col items-center"
+              className="flex flex-col items-center group"
             >
-              <div className="relative w-64 h-[290px] mb-8">
+              <div className="relative w-64 h-[290px] mb-8 transition-transform duration-300 group-hover:scale-105">
                 <div
-                  className="absolute inset-0 rounded-full bg-[#E6E6E6] z-0 top-[10%]"
-                  style={{
-                    background:
-                      "radial-gradient(circle at center, #F5F5F5 0%, #FAFAFA 100%)",
-                  }}
+                  className="absolute inset-0 rounded-full bg-gradient-to-br from-[#7e40b6] to-[#2A9D8F] opacity-5 z-0 top-[10%]"
                 />
                 <div className="relative w-full h-full overflow-visible">
                   <Image
@@ -129,7 +125,7 @@ export default function Team() {
                   />
                 </div>
               </div>
-              <h3 className="text-[#1D4451] text-xl font-semibold text-center">
+              <h3 className="text-[#7e40b6] text-xl font-semibold text-center">
                 {member.name}
               </h3>
               <p className="text-gray-500 mt-1 text-center text-sm">
@@ -138,17 +134,17 @@ export default function Team() {
               <div className="flex gap-4 mt-4">
                 <a
                   href="#"
-                  className="bg-white p-2 rounded-md shadow-sm hover:shadow-md transition-shadow"
+                  className="bg-white p-2 rounded-md shadow-sm hover:shadow-md transition-all duration-300 hover:bg-[#7e40b6] group"
                   aria-label={`LinkedIn profile of ${member.name}`}
                 >
-                  <Linkedin className="w-4 h-4 text-[#2A9D8F]" />
+                  <Linkedin className="w-4 h-4 text-[#7e40b6] group-hover:text-white transition-colors duration-300" />
                 </a>
                 <a
                   href="#"
-                  className="bg-white p-2 rounded-md shadow-sm hover:shadow-md transition-shadow"
+                  className="bg-white p-2 rounded-md shadow-sm hover:shadow-md transition-all duration-300 hover:bg-[#7e40b6] group"
                   aria-label={`Instagram profile of ${member.name}`}
                 >
-                  <Instagram className="w-4 h-4 text-[#2A9D8F]" />
+                  <Instagram className="w-4 h-4 text-[#7e40b6] group-hover:text-white transition-colors duration-300" />
                 </a>
               </div>
             </motion.div>

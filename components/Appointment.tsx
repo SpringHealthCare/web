@@ -5,8 +5,6 @@ import Image from 'next/image'
 import { Button } from "@/components/ui/button"
 import { AppointmentPopup } from './AppontmentPopup'
 
-
-
 export default function Appointment() {
   const [isPopupOpen, setIsPopupOpen] = useState(false)
 
@@ -21,11 +19,19 @@ export default function Appointment() {
   ]
 
   return (
-    <div className="relative bg-[#40CEC3] min-h-screen p-8">
-      <div className="max-w-6xl mx-auto">
+    <div className="relative bg-gradient-to-br from-[#04c7d0] via-[#7e40b6] to-[#04c7d0] min-h-screen p-8">
+      {/* Decorative pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <div className="absolute inset-0" style={{
+          backgroundImage: "radial-gradient(circle at 20px 20px, white 2px, transparent 0)",
+          backgroundSize: "40px 40px"
+        }} />
+      </div>
+
+      <div className="max-w-6xl mx-auto relative z-10">
         <div className="mb-12">
           <h1 className="text-white text-4xl font-bold mb-4">Book an Appointment</h1>
-          <p className="text-white text-lg max-w-md">
+          <p className="text-gray-100 text-lg max-w-md">
             Schedule your visit now for personalized care in a comfortable environment. Your journey to a brighter, healthier smile begins here.
           </p>
         </div>
@@ -34,13 +40,13 @@ export default function Appointment() {
           <div className="flex flex-col md:flex-row items-center">
             {/* Schedule column */}
             <div className="w-full md:w-[40%] z-10">
-              <div className="bg-[#0A4A45] text-white p-8 rounded-lg">
-                <h2 className="text-xl mb-6">Our Working Program</h2>
+              <div className="bg-gradient-to-br from-[#7e40b6] to-[#04c7d0] text-white p-8 rounded-lg shadow-xl">
+                <h2 className="text-xl mb-6 font-semibold">Our Working Program</h2>
                 <div className="space-y-4">
                   {workingHours.map((schedule) => (
-                    <div key={schedule.day} className="flex justify-between items-center border-b border-[#1a5a55] pb-2">
-                      <span>{schedule.day}</span>
-                      <span>{schedule.hours}</span>
+                    <div key={schedule.day} className="flex justify-between items-center border-b border-white/20 pb-2">
+                      <span className="text-gray-100">{schedule.day}</span>
+                      <span className="text-gray-100">{schedule.hours}</span>
                     </div>
                   ))}
                 </div>
@@ -49,8 +55,8 @@ export default function Appointment() {
 
             {/* Image column */}
             <div className="w-full md:w-[65%] md:-ml-[5%] relative mt-8 md:mt-0">
-              <div className="relative h-[500px] rounded-lg overflow-hidden">
-                <div className="absolute inset-0 bg-black/20 -z-10" /> {/* Overlay */}
+              <div className="relative h-[500px] rounded-lg overflow-hidden shadow-xl">
+                <div className="absolute inset-0 bg-gradient-to-br from-[#7e40b6]/40 to-[#04c7d0]/40 z-10" />
                 <Image
                   src="https://drive.google.com/uc?export=view&id=15H174lGct3TSGpGNQHthIb8le__ZRczS"
                   alt="Dental Office Interior"
@@ -59,7 +65,7 @@ export default function Appointment() {
                 />
                 <div className="absolute inset-0 flex items-center justify-center z-20">
                   <Button 
-                    className="bg-[#0A4A45] text-white hover:bg-[#0A4A45]/90 px-8 py-6 text-lg"
+                    className="bg-gradient-to-r from-[#7e40b6] to-[#04c7d0] text-white hover:opacity-90 px-8 py-6 text-lg shadow-lg transition-all duration-300 hover:scale-105"
                     onClick={() => setIsPopupOpen(true)}
                   >
                     Book an Appointment
