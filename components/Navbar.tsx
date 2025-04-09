@@ -8,6 +8,7 @@ import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { auth } from '@/lib/firebase'
+import { handleNavLinkClick } from '@/utils/scrollUtils'
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -37,26 +38,13 @@ const Navbar = () => {
     }
   }, [])
 
-  const handleScrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
-    e.preventDefault()
-    if (pathname === '/') {
-      const element = document.getElementById(sectionId)
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' })
-      }
-    } else {
-      window.location.href = `/#${sectionId}`
-    }
-    if (isOpen) setIsOpen(false)
-  }
-
   const navLinks = [
     { href: '/', label: 'Home' },
-    { href: '/about', label: 'About' },
-    { href: '/team', label: 'Team' },
-    { href: '/services', label: 'Services', isSection: true },
-    { href: '/faq', label: 'FAQ' },
-    { href: '/chat', label: 'Chat' },
+    { href: '/about', label: 'About', sectionId: 'about' },
+    { href: '/team', label: 'Team', sectionId: 'team' },
+    { href: '/services', label: 'Services', sectionId: 'services' },
+    { href: '/faq', label: 'FAQ', sectionId: 'faq' },
+    { href: '/chat', label: 'Chat', sectionId: 'chat' },
     ...(user?.email?.includes('@springhealth.com') ? [{ href: '/admin/chat', label: 'Admin Chat' }] : []),
   ]
 
@@ -88,11 +76,14 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
-              link.isSection ? (
+              link.sectionId ? (
                 <a
                   key={link.href}
                   href={link.href}
-                  onClick={(e) => handleScrollToSection(e, link.href.replace('#', ''))}
+                  onClick={(e) => {
+                    handleNavLinkClick(e, link.sectionId!, pathname)
+                    if (isOpen) setIsOpen(false)
+                  }}
                   className={`text-sm font-medium transition-colors duration-200 ${
                     shouldBeTransparent
                       ? 'text-white hover:text-gray-200'
@@ -110,6 +101,7 @@ const Navbar = () => {
                       ? 'text-white hover:text-gray-200'
                       : 'text-gray-700 hover:text-[#04c7d0]'
                   }`}
+                  onClick={() => isOpen && setIsOpen(false)}
                 >
                   {link.label}
                 </Link>
@@ -124,53 +116,66 @@ const Navbar = () => {
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-md text-gray-700 hover:text-[#04c7d0] focus:outline-none"
-          >
-            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          {/* Mobile menu button */}
+          <div className="md:hidden">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="text-gray-700 hover:text-[#04c7d0] focus:outline-none"
+            >
+              {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
         </div>
-      </div>
 
-      {/* Mobile Navigation */}
-      <motion.div
-        initial={false}
-        animate={{ height: isOpen ? 'auto' : 0 }}
-        className="md:hidden overflow-hidden bg-white"
-      >
-        <div className="px-4 py-2 space-y-2">
-          {navLinks.map((link) => (
-            link.isSection ? (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={(e) => handleScrollToSection(e, link.href.replace('#', ''))}
-                className="block text-gray-700 hover:text-[#04c7d0] py-2"
-              >
-                {link.label}
-              </a>
-            ) : (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="block text-gray-700 hover:text-[#04c7d0] py-2"
-                onClick={() => setIsOpen(false)}
-              >
-                {link.label}
-              </Link>
-            )
-          ))}
-          <a
-            href="tel:+233559331679"
-            className="flex items-center gap-2 text-white bg-[#04c7d0] hover:bg-[#7e40b6] px-4 py-2 rounded-full transition-colors"
-          >
-            <Phone className="w-4 h-4" />
-            <span className="hidden sm:inline">Call Us</span>
-          </a>
-        </div>
-      </motion.div>
+        {/* Mobile Navigation */}
+        <motion.div
+          initial={false}
+          animate={{ height: isOpen ? 'auto' : 0 }}
+          className="md:hidden overflow-hidden"
+        >
+          <div className="px-2 pt-2 pb-3 space-y-1">
+            {navLinks.map((link) => (
+              link.sectionId ? (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  onClick={(e) => {
+                    handleNavLinkClick(e, link.sectionId!, pathname)
+                    setIsOpen(false)
+                  }}
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${
+                    shouldBeTransparent
+                      ? 'text-white hover:bg-white/10'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${
+                    shouldBeTransparent
+                      ? 'text-white hover:bg-white/10'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              )
+            ))}
+            <a
+              href="tel:+233559331679"
+              className="flex items-center gap-2 text-white bg-[#04c7d0] hover:bg-[#7e40b6] px-4 py-2 rounded-full transition-colors mt-2"
+            >
+              <Phone className="w-4 h-4" />
+              <span>Call Us</span>
+            </a>
+          </div>
+        </motion.div>
+      </div>
     </motion.nav>
   )
 }

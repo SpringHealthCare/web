@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
-import { Send, User, MessageSquare, Edit2, Trash2, Reply, X } from 'lucide-react'
+import { Send, FileText } from 'lucide-react'
 import { auth, db, storage } from '@/lib/firebase'
 import { 
   collection, 
@@ -65,6 +65,26 @@ const Chat = () => {
   const [lastMessageTime, setLastMessageTime] = useState(0)
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const messagesStartRef = useRef<HTMLDivElement>(null)
+
+  const handleGuestEntry = async (name: string) => {
+    setGuestName(name)
+    // Generate a unique ID for the guest
+    const id = `guest_${Date.now()}`
+    setGuestId(id)
+
+    // Create a guest user document in Firestore
+    try {
+      await setDoc(doc(db, 'users', id), {
+        id,
+        name,
+        type: 'guest',
+        lastActive: serverTimestamp(),
+        status: 'online'
+      })
+    } catch (error) {
+      console.error('Error creating guest user:', error)
+    }
+  }
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -325,198 +345,117 @@ const Chat = () => {
     }
   }
 
-  // Show guest entry form if not authenticated and no guest name set
-  if (!user && !guestName) {
-    return <GuestChatEntry onGuestEntry={handleGuestEntry} />
-  }
-
   const messageGroups = groupMessagesByDate(messages)
 
   return (
-    <div className="w-full px-4 py-6">
-      <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-        <div className="bg-gradient-to-r from-[#04c7d0] to-[#7e40b6] p-4 text-white sticky top-0 z-10">
-          <h2 className="text-xl font-semibold">Spring Health Chat</h2>
-          <p className="text-sm opacity-90">Chat with our healthcare team</p>
-        </div>
-
-        <div 
-          className="h-[60vh] overflow-y-auto p-4"
-          onScroll={handleScroll}
-        >
-          {loading && (
-            <div className="text-center py-2">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[#04c7d0] mx-auto"></div>
-            </div>
-          )}
-          <div ref={messagesStartRef} />
-          
-          {Object.entries(messageGroups).map(([date, groupMessages]) => (
-            <div key={date} className="mb-4">
-              <div className="text-center mb-4">
-                <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">
-                  {date}
-                </span>
-              </div>
-              {groupMessages.map((message) => (
-                <motion.div
-                  key={message.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`mb-4 ${
-                    (user && message.userId === user.uid) || (!user && message.userId === guestId)
-                      ? 'flex justify-end'
-                      : 'flex justify-start'
-                  }`}
-                >
-                  <div className="max-w-[70%]">
-                    {message.replyTo && (
-                      <div className="text-xs text-gray-500 mb-1">
-                        Replying to {message.replyTo.userName}: {message.replyTo.text}
-                      </div>
-                    )}
+    <div className="flex flex-col h-[calc(100vh-200px)]">
+      {!user && !guestId ? (
+        <GuestChatEntry onGuestEntry={handleGuestEntry} />
+      ) : (
+        <>
+          <div className="flex-1 overflow-y-auto p-4 space-y-4" onScroll={handleScroll}>
+            <div ref={messagesStartRef} />
+            {Object.entries(messageGroups).map(([date, dateMessages]) => (
+              <div key={date} className="space-y-4">
+                <div className="text-center">
+                  <span className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-sm">
+                    {date}
+                  </span>
+                </div>
+                {dateMessages.map((message) => (
+                  <div
+                    key={message.id}
+                    className={`flex ${message.userId === (user?.uid || guestId) ? 'justify-end' : 'justify-start'}`}
+                  >
                     <div
-                      className={`rounded-lg p-3 ${
-                        message.isAutomated
-                          ? 'bg-gray-100 text-gray-800'
-                          : (user && message.userId === user.uid) || (!user && message.userId === guestId)
+                      className={`max-w-[70%] rounded-lg p-3 ${
+                        message.userId === (user?.uid || guestId)
                           ? 'bg-[#04c7d0] text-white'
-                          : message.isProfessional
-                          ? 'bg-[#7e40b6] text-white'
-                          : 'bg-gray-100 text-gray-800'
+                          : 'bg-gray-100 text-gray-900'
                       }`}
                     >
-                      <div className="flex items-center gap-2 mb-1">
-                        {message.isProfessional ? (
-                          <MessageSquare className="w-4 h-4" />
-                        ) : (
-                          <User className="w-4 h-4" />
-                        )}
-                        <span className="text-sm font-medium">{message.userName}</span>
-                      </div>
-                      <div 
-                        className="text-sm"
-                        dangerouslySetInnerHTML={{ 
-                          __html: formatMessageText(decryptMessage(message.text, message.userId))
-                        }}
-                      />
+                      {message.replyTo && (
+                        <div className="text-xs mb-1 opacity-75">
+                          Replying to {message.replyTo.userName}: {message.replyTo.text}
+                        </div>
+                      )}
                       {message.fileUrl && (
-                        <div className="mt-2">
+                        <div className="mb-2">
                           {message.fileType?.startsWith('image/') ? (
-                            <img 
-                              src={message.fileUrl} 
-                              alt={message.fileName} 
+                            <img
+                              src={message.fileUrl}
+                              alt={message.fileName || 'Uploaded file'}
                               className="max-w-full rounded-lg"
                             />
                           ) : (
-                            <a 
-                              href={message.fileUrl} 
-                              target="_blank" 
+                            <a
+                              href={message.fileUrl}
+                              target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center gap-2 text-sm text-blue-500 hover:underline"
+                              className="flex items-center text-sm hover:underline"
                             >
-                              <File className="w-4 h-4" />
-                              {message.fileName}
+                              <FileText className="w-4 h-4 mr-1" />
+                              {message.fileName || 'Download file'}
                             </a>
                           )}
                         </div>
                       )}
-                      <div className="flex items-center justify-between mt-1">
-                        <span className="text-xs opacity-70">
-                          {formatTimestamp(message.timestamp)}
-                          {message.edited && ' (edited)'}
-                        </span>
-                        <div className="flex items-center gap-2">
-                          {(user && message.userId === user.uid) || (!user && message.userId === guestId) ? (
-                            <>
-                              <span className="text-xs opacity-70">
-                                {message.status === 'sending' ? 'Sending...' : 
-                                 message.status === 'delivered' ? '✓' : 
-                                 message.status === 'read' ? '✓✓' : ''}
-                              </span>
-                              <button
-                                onClick={() => setEditingMessage(message)}
-                                className="text-xs opacity-70 hover:opacity-100"
-                              >
-                                <Edit2 className="w-3 h-3" />
-                              </button>
-                              <button
-                                onClick={() => deleteMessage(message.id)}
-                                className="text-xs opacity-70 hover:opacity-100"
-                              >
-                                <Trash2 className="w-3 h-3" />
-                              </button>
-                            </>
-                          ) : (
-                            <button
-                              onClick={() => setReplyingTo(message)}
-                              className="text-xs opacity-70 hover:opacity-100"
-                            >
-                              <Reply className="w-3 h-3" />
-                            </button>
-                          )}
+                      <div className="flex items-start">
+                        <div className="flex-1">
+                          <p className="text-sm">{message.text}</p>
+                          <div className="flex items-center mt-1 space-x-2 text-xs opacity-75">
+                            <span>{message.userName}</span>
+                            <span>{formatTimestamp(message.timestamp)}</span>
+                            {message.edited && <span>(edited)</span>}
+                          </div>
                         </div>
+                        <MessageReactions
+                          messageId={message.id}
+                          reactions={message.reactions || {}}
+                          userId={user?.uid || guestId}
+                          onReact={handleReaction}
+                        />
                       </div>
-                      <MessageReactions
-                        messageId={message.id}
-                        reactions={message.reactions || {}}
-                        userId={user?.uid || guestId}
-                        onReact={handleReaction}
-                      />
                     </div>
                   </div>
-                </motion.div>
-              ))}
-            </div>
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
-
-        <form onSubmit={sendMessage} className="p-4 border-t bg-white sticky bottom-0">
-          {replyingTo && (
-            <div className="mb-2 p-2 bg-gray-50 rounded-lg flex justify-between items-center">
-              <div className="text-sm text-gray-600">
-                Replying to {replyingTo.userName}: {replyingTo.text}
+                ))}
               </div>
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
+          <form onSubmit={sendMessage} className="p-4 border-t">
+            <div className="flex items-center space-x-2">
+              <input
+                type="text"
+                value={newMessage}
+                onChange={(e) => {
+                  setNewMessage(e.target.value)
+                  handleTyping()
+                }}
+                placeholder="Type your message..."
+                className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#04c7d0]"
+              />
+              <FileAttachment
+                onFileSelect={setSelectedFile}
+                onRemove={() => setSelectedFile(null)}
+                file={selectedFile}
+              />
               <button
-                type="button"
-                onClick={() => setReplyingTo(null)}
-                className="text-gray-500 hover:text-gray-700"
+                type="submit"
+                disabled={!newMessage.trim() && !selectedFile}
+                className="bg-[#04c7d0] text-white p-2 rounded-lg hover:bg-[#03b5bc] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <X className="w-4 h-4" />
+                <Send className="w-5 h-5" />
               </button>
             </div>
-          )}
-          <FileAttachment
-            file={selectedFile}
-            onFileSelect={setSelectedFile}
-            onRemove={() => setSelectedFile(null)}
-          />
-          <div className="flex gap-2 mt-2">
-            <input
-              type="text"
-              value={newMessage}
-              onChange={(e) => {
-                setNewMessage(e.target.value)
-                handleTyping()
-              }}
-              placeholder="Type your message..."
-              className="flex-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#04c7d0]"
-            />
-            <button
-              type="submit"
-              className="bg-[#04c7d0] text-white px-4 py-2 rounded-lg hover:bg-[#03b5bc] transition-colors"
-            >
-              <Send className="w-5 h-5" />
-            </button>
-          </div>
-          {isTyping && (
-            <div className="text-sm text-gray-500 mt-1">
-              Typing...
-            </div>
-          )}
-        </form>
-      </div>
+            {isTyping && (
+              <div className="text-xs text-gray-500 mt-1">
+                {user?.displayName || guestName} is typing...
+              </div>
+            )}
+          </form>
+        </>
+      )}
     </div>
   )
 }
