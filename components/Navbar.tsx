@@ -43,7 +43,7 @@ const Navbar = () => {
     { href: '/about', label: 'About', sectionId: 'about' },
     { href: '/team', label: 'Team', sectionId: 'team' },
     { href: '/services', label: 'Services', sectionId: 'services' },
-    { href: '/faq', label: 'FAQ', sectionId: 'faq' },
+    { href: '/faq', label: 'FAQ' },
     { href: '/chat', label: 'Chat', sectionId: 'chat' },
     ...(user?.email?.includes('@springhealth.com') ? [{ href: '/admin/chat', label: 'Admin Chat' }] : []),
   ]
