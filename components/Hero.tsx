@@ -4,7 +4,7 @@ import Image from 'next/image'
 import { motion } from 'framer-motion'
 
 import { useState } from 'react';
-import { AppointmentPopup } from './AppontmentPopup';
+import { AppointmentPopup } from '@/components/AppointmentPopup';
 
 export default function Hero() {
   const [isPopupOpen, setIsPopupOpen] = useState(false);

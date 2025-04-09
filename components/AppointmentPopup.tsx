@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { X, Phone, MessageSquare, Calendar, User, PhoneCall } from "lucide-react";
-import { database } from "../firebaseConfig";
+import { db } from "@/lib/firebase";
 import { ref, push, set } from "firebase/database";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 
@@ -12,7 +12,7 @@ interface AppointmentPopupProps {
   onClose: () => void;
 }
 
-const PHONE_NUMBER = "0559331679";
+const PHONE_NUMBER = "+233559331679";
 
 export function AppointmentPopup({ isOpen, onClose }: AppointmentPopupProps) {
   const [name, setName] = useState("");
@@ -42,7 +42,7 @@ export function AppointmentPopup({ isOpen, onClose }: AppointmentPopupProps) {
     setIsSubmitting(true);
 
     try {
-      const appointmentsRef = ref(database, "appointments");
+      const appointmentsRef = ref(db, "appointments");
       const newAppointmentRef = push(appointmentsRef);
       await set(newAppointmentRef, {
         name,
@@ -64,7 +64,7 @@ export function AppointmentPopup({ isOpen, onClose }: AppointmentPopupProps) {
   };
 
   const handlePhoneCall = () => {
-    if (typeof window !== "undefined" && "ontouchstart" in window) {
+    if (typeof window !== "undefined") {
       window.location.href = `tel:${PHONE_NUMBER}`;
     } else {
       setShowPhoneNumber(true);

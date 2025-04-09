@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { motion } from "motion/react";
-
-import { ref, push } from "firebase/database";
-import { database } from "@/firebaseConfig";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
@@ -15,8 +14,11 @@ export default function Newsletter() {
     e.preventDefault();
     setError(null);
     try {
-      const emailsRef = ref(database, "newsletter-emails");
-      await push(emailsRef, { email, timestamp: Date.now() });
+      await addDoc(collection(db, "newsletter-emails"), {
+        email,
+        timestamp: serverTimestamp(),
+        subscribed: true
+      });
       console.log("Subscribed with email:", email);
       setSubscribed(true);
       setEmail("");

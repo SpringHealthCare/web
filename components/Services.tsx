@@ -1,14 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { motion } from "motion/react";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Phone, MessageSquare } from "lucide-react";
-import { database } from "../firebaseConfig";
-import { ref, push, set } from "firebase/database";
+import { motion } from "framer-motion";
+import { Trophy, Syringe } from 'lucide-react'
 
 interface ServiceItemProps {
   title: string;
@@ -49,49 +43,7 @@ const additionalServices = [
   }
 ];
 
-export default function Services() {
-  const [name, setName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [selectedDate, setSelectedDate] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showPhoneNumber, setShowPhoneNumber] = useState(false);
-  const PHONE_NUMBER = "0559331679";
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const appointmentsRef = ref(database, "appointments");
-      const newAppointmentRef = push(appointmentsRef);
-      await set(newAppointmentRef, {
-        name,
-        phone,
-        date: selectedDate,
-        createdAt: new Date().toISOString(),
-      });
-
-      // Reset form on successful submission
-      setName("");
-      setPhone("");
-      setSelectedDate("");
-      alert("Appointment booked successfully!");
-    } catch (error) {
-      console.error("Error saving appointment:", error);
-      alert("An error occurred. Please try again later.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handlePhoneCall = () => {
-    if (typeof window !== "undefined" && "ontouchstart" in window) {
-      window.location.href = `tel:${PHONE_NUMBER}`;
-    } else {
-      setShowPhoneNumber(true);
-    }
-  };
-
+const Services = () => {
   return (
     <section className="py-20 bg-white relative overflow-hidden">
       {/* Dotted pattern background - top right */}
@@ -115,12 +67,48 @@ export default function Services() {
                 whileInView={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
                 viewport={{ once: true }}
-                className="text-[#7e40b6] font-medium"
+                className="text-[#7e40b6] font-medium text-2xl"
               >
                 Services
               </motion.span>
 
-              <motion.h2
+             
+            </div>
+
+            {/* Stats Section */}
+            <div className="space-y-6">
+              <div className="flex gap-4 items-start">
+                <div className="bg-[#04c7d0]/10 p-3 rounded-lg">
+                  <Trophy className="w-6 h-6 text-[#04c7d0]" />
+                </div>
+                <div>
+                  <h3 className="text-[#1D4451] font-semibold text-xl mb-2">
+                    Years of Excellence
+                  </h3>
+                  <p className="text-gray-600">
+                    At SHC, we are passionate about providing exceptional care in a 
+                    warm and welcoming environment.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-4 items-start">
+                <div className="bg-[#04c7d0]/10 p-3 rounded-lg">
+                  <Syringe className="w-6 h-6 text-[#04c7d0]" />
+                </div>
+                <div>
+                  <h3 className="text-[#1D4451] font-semibold text-xl mb-2">
+                    100% Satisfied Patients
+                  </h3>
+                  <p className="text-gray-600">
+                    Over 10,000 satisfied patients have entrusted their Fertility care, 
+                    Obstetrics, Antenatal, 4D scans and Gynaecological care to Spring 
+                    Health Care Ltd.
+                  </p>
+                </div>
+              </div>
+            </div>
+            <motion.h2
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
@@ -130,49 +118,32 @@ export default function Services() {
                 3D/4D Scan
               </motion.h2>
 
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                viewport={{ once: true }}
-                className="text-gray-600 text-lg"
-              >
-                Spring Health Care Ltd offers exclusive 4D baby scans using advanced ultrasound technology. This unique experience allows parents to view their baby's movements, smiles, thumb-sucking, and more in real-time, with colored video. A once-in-a-lifetime opportunity to connect with your unborn child.
-              </motion.p>
-            </div>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              className="text-gray-600 text-lg"
+            >
+              Spring Health Care Ltd offers exclusive 4D baby scans using advanced ultrasound technology. This unique experience allows parents to view their baby's movements, smiles, thumb-sucking, and more in real-time, with colored video. A once-in-a-lifetime opportunity to connect with your unborn child.
+            </motion.p>
 
             <div className="grid md:grid-cols-2 gap-8">
               <ServiceItem
-                title="Obstetric Scan"
-                description="An obstetric scan, or pregnancy ultrasound, is a non-invasive procedure that uses sound waves to create images of a developing fetus, the uterus, and ovaries."
+                title="Obstetrics"
+                description="Comprehensive care during pregnancy, including regular check-ups, ultrasound scans, and delivery services."
               />
               <ServiceItem
-                title="Fertility Scan"
-                description="Designed for those trying to conceive naturally or undergoing fertility treatment, this scan tracks egg growth to maturity and measures the womb lining to assess readiness for implantation, helping to increase chances of pregnancy."
+                title="Gynecology"
+                description="Specialized care for women's health, including routine check-ups, family planning, and treatment of gynecological conditions."
               />
               <ServiceItem
-                title="Wellwoman Screen"
-                description="A yearly Well Woman Screen helps you take charge of your health and prevent potential issues. It includes: Reviewing your health history, Clinical breast and pelvic examinations, A gynecological scan, and Specialist advice for personalized care."
+                title="Fertility Treatment"
+                description="Advanced fertility services including consultation, diagnosis, and treatment options for couples trying to conceive."
               />
               <ServiceItem
-                title="Anomaly Scan"
-                description="The anomaly scan, performed between 20-24 weeks of pregnancy, is a crucial milestone. It provides a detailed assessment of the baby's head, brain, face, neck, spine, chest, heart, abdomen, kidneys, bladder, and limbs to ensure normal development and detect any deformities."
-              />
-              <ServiceItem
-                title="Gender Identification Scan"
-                description="At Spring Health Care Ltd, you can determine your baby's gender as early as 16 weeks with a 95% accuracy rate. No referral is required. The scan also includes a free well-being check of your baby."
-              />
-              <ServiceItem
-                title="Fetal Doppler Scan"
-                description="A fetal Doppler scan is a specialized ultrasound used to assess an unborn baby's health by studying blood flow between the mother and baby. It ensures the baby receives sufficient oxygen and nutrients for healthy growth."
-              />
-              <ServiceItem
-                title="CTG Scan"
-                description="Cardiotocography (CTG) is a non-invasive procedure offered as part of comprehensive maternity care to ensure the safety of both mother and baby during pregnancy and labor. CTG: Monitors fetal heart rate patterns, Detects signs of distress or abnormalities, Supports timely medical interventions if necessary, Can be performed during antenatal check-ups or labor."
-              />
-              <ServiceItem
-                title="Antenatal Care"
-                description="Antenatal Care Services ensure the health and well-being of both mother and baby during pregnancy. Services include: Medical history review, Vital signs monitoring, Urine tests, Physical assessments, Laboratory tests, Ultrasound scans, Health education, and Birth plan counseling."
+                title="Ultrasound Scans"
+                description="State-of-the-art 3D/4D ultrasound technology for detailed imaging and monitoring during pregnancy."
               />
             </div>
           </div>
@@ -216,7 +187,6 @@ export default function Services() {
               viewport={{ once: true }}
               className="space-y-6"
             >
-              
               <div className="grid sm:grid-cols-2 gap-6">
                 {additionalServices.map((service, index) => (
                   <ServiceItem
@@ -233,3 +203,8 @@ export default function Services() {
     </section>
   );
 }
+
+export default Services;
+
+
+

@@ -55,6 +55,10 @@ export function AboutPopup({ isOpen, onClose }: AboutPopupProps) {
               </Button>
             </Link>
           </div>
+
+          <p className="text-gray-600 mb-4">
+            We&apos;re proud of our journey and the trust we&apos;ve built within our community.
+          </p>
         </div>
       </DialogContent>
     </Dialog>

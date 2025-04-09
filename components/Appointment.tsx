@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { Button } from "@/components/ui/button"
-import { AppointmentPopup } from './AppontmentPopup'
+import { AppointmentPopup } from './AppointmentPopup'
 
 export default function Appointment() {
   const [isPopupOpen, setIsPopupOpen] = useState(false)

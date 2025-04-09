@@ -2,14 +2,10 @@
 
 import Image from 'next/image'
 import { motion } from 'framer-motion'
-import { Trophy, Syringe } from 'lucide-react'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { AboutPopup } from './AboutPopup'
-import { useState } from 'react'
 
 export default function About() {
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-
   return (
     <section className="py-20 bg-white relative overflow-hidden">
       {/* Dotted pattern background */}
@@ -50,59 +46,36 @@ export default function About() {
             <span className="text-[#04c7d0] font-medium">About</span>
             
             <h2 className="text-[#1D4451] text-4xl font-bold">
-              Obs and Gynae Clinic
+              About Spring Health Care Ltd
             </h2>
             
-            <p className="text-gray-600 text-lg">
-              Our Gynaecological pelvic scan offers a thorough examination of your 
-              womb, fallopian tubes and ovaries. This helps in detecting many 
-              gynaecological conditions.
-            </p>
-
-            <div className="space-y-6">
-              <div className="flex gap-4 items-start">
-                <div className="bg-[#04c7d0]/10 p-3 rounded-lg">
-                  <Trophy className="w-6 h-6 text-[#04c7d0]" />
-                </div>
-                <div>
-                  <h3 className="text-[#1D4451] font-semibold text-xl mb-2">
-                    Years of Excellence
-                  </h3>
-                  <p className="text-gray-600">
-                    At SHC, we are passionate about providing exceptional care in a 
-                    warm and welcoming environment.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex gap-4 items-start">
-                <div className="bg-[#04c7d0]/10 p-3 rounded-lg">
-                  <Syringe className="w-6 h-6 text-[#04c7d0]" />
-                </div>
-                <div>
-                  <h3 className="text-[#1D4451] font-semibold text-xl mb-2">
-                    100% Satisfied Patients
-                  </h3>
-                  <p className="text-gray-600">
-                    Over 10,000 satisfied patients have entrusted their Fertility care, 
-                    Obstetrics, Antenatal, 4D scans and Gynaecological care to Spring 
-                    Health Care Ltd.
-                  </p>
-                </div>
-              </div>
+            {/* Brief History Section */}
+            <div>
+              <h3 className="text-lg font-semibold text-[#04c7d0] mb-3">Brief History</h3>
+              <p className="text-gray-600">
+                Spring Health Care Limited, formerly known as Info Health Limited, started operations in October 2009. Beginning with a focus on cervical and prostate cancer awareness and screening, the organization expanded its services to include comprehensive Obstetric & Gynaecological Services. Through consistency in providing excellent and quality Obs. & Gynae. Services, Spring Health Care Ltd. has grown to become a trusted provider of quality healthcare services.
+              </p>
             </div>
 
-            <Button
-              variant="link"
-              className="text-[#04c7d0] hover:text-[#7e40b6] font-medium p-0 h-auto mt-6"
-              onClick={() => setIsPopupOpen(true)}
-            >
-              More about Us
-            </Button>
+            {/* Founder Biography Section */}
+            <div>
+              <h3 className="text-lg font-semibold text-[#04c7d0] mb-3">Our Founder</h3>
+              <p className="text-gray-600">
+                Dr. Francis Bitasimi Bilson founded Spring Health Care Limited with a vision to operate a private diagnostic centre providing individualized care. A graduate of the University of Ghana Medical School and a Specialist Obstetrician-Gynaecologist, Dr. Bilson was known for his innovative approach to healthcare, including the MEDICS 24/7 project during the COVID-19 pandemic and the establishment of the Spring Health Care Ltd Men's clinic.
+              </p>
+            </div>
+
+            {/* Read More Button */}
+            <Link href="/about">
+              <Button 
+                className="bg-gradient-to-r from-[#04c7d0] to-[#7e40b6] text-white hover:opacity-90 transition-opacity"
+              >
+                Read Full Story
+              </Button>
+            </Link>
           </motion.div>
         </div>
       </div>
-      <AboutPopup isOpen={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
     </section>
   )
 }

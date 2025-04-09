@@ -1,9 +1,10 @@
-import React from 'react';
-
-const AboutPage = () => {
+export default function AboutPage() {
   return (
     <div className="container mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold text-center mb-12 text-primary">About Spring Health Care</h1>
+      <h1 className="text-4xl font-bold text-center mb-12 bg-gradient-to-r from-[#04c7d0] to-[#7e40b6] bg-clip-text text-transparent relative inline-block">
+        About Spring Health Care
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#04c7d0] to-[#7e40b6] rounded-full"></div>
+      </h1>
       
       {/* History Section */}
       <section className="mb-16">
@@ -21,8 +22,11 @@ const AboutPage = () => {
           <p>
             Due to consistency in providing excellent and quality Obs. & Gynae. Services and the organization's vision to be a pacemaker in advanced Obs. & Gynae. ultrasound scans and consultancy, further expansion was seen in the area of high earned equipment base, skill mix staff, additional office space, and service portfolio. This resulted in the change of the name once again from Spring Health Diagnostics Limited to Spring Health Care Ltd. in 2018 to reflect the new vision of rendering care services beyond offering ultrasound scan services to women. The men's clinic and subsequently Medics 24/7 a virtual and home healthcare service to the cherished clientele was birth during this period.
           </p>
-          <p>
-            Currently, Spring Health Care Ltd. continues to offer great services and remains the health care provider that prioritises the care of its clients and their family with a staff strength that corresponds to the services offered.
+          <p className="text-gray-600 mb-6">
+            At Spring Health Care, we&apos;re dedicated to providing exceptional healthcare services that prioritize your well-being and comfort. Our journey began with a simple yet powerful vision: to make quality healthcare accessible, personalized, and compassionate.
+          </p>
+          <p className="text-gray-600">
+            We&apos;re not just healthcare providers; we&apos;re your partners in wellness.
           </p>
         </div>
       </section>
@@ -54,6 +58,4 @@ const AboutPage = () => {
       </section>
     </div>
   );
-};
-
-export default AboutPage; 
+} 
